@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>StudyPilot AI</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <h1>StudyPilot AI</h1>
+  <p>Your Smart Learning Assistant</p>
+
+  <input id="topic" type="text" placeholder="Enter a topic (e.g. Binary Search)">
+
+  <select id="mode">
+    <option value="explain">Explain Concept</option>
+    <option value="quiz">Generate Quiz</option>
+    <option value="study">Study Advice</option>
+  </select>
+
+  <button onclick="askAI()">Ask AI</button>
+
+  <pre id="output">AI response will appear here...</pre>
+
+  <script src="script.js"></script>
+</body>
+</html>

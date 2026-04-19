@@ -1,0 +1,22 @@
+body {
+  font-family: Arial, sans-serif;
+  max-width: 700px;
+  margin: 40px auto;
+}
+
+input, select, button {
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+}
+
+button {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+pre {
+  background-color: #f4f4f4;
+  padding: 15px;
+  white-space: pre-wrap;
+}

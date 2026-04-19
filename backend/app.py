@@ -1,14 +1,16 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import requests
 
 app = Flask(__name__)
+CORS(app)  
 
 OLLAMA_API = "http://localhost:11434/api/generate"
-MODEL_NAME = "gemma"
+MODEL = "gemma"
 
 def call_llm(prompt):
     payload = {
-        "model": MODEL_NAME,
+        "model": MODEL,
         "prompt": prompt,
         "stream": False
     }
@@ -33,12 +35,12 @@ def ask():
     else:
         return jsonify({"error": "Invalid mode"}), 400
 
-    ai_output = call_llm(prompt)
+    ai_result = call_llm(prompt)
 
     return jsonify({
         "topic": topic,
         "mode": mode,
-        "result": ai_output
+        "result": ai_result
     })
 
 if __name__ == "__main__":
