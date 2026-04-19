@@ -5,19 +5,16 @@ import requests
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from dotenv import load_dotenv
 
 # =========================
-# Environment Setup
+# Environment Variables
 # =========================
-
-load_dotenv()
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_ANON_KEY = os.getenv("SUPABASE_ANON_KEY")
 
-# Render 会自动注入这个环境变量
 IS_RENDER = os.getenv("RENDER") == "true"
+
 
 # =========================
 # Optional Supabase Setup
