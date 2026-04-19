@@ -1,40 +1,62 @@
 import os
-from dotenv import load_dotenv
-from supabase import create_client
+import time
+import random
+import requests
 
-load_dotenv()  
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from dotenv import load_dotenv
+
+# =========================
+# Environment Setup
+# =========================
+
+load_dotenv()
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_ANON_KEY = os.getenv("SUPABASE_ANON_KEY")
 
-supabase = create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
+# Render 会自动注入这个环境变量
+IS_RENDER = os.getenv("RENDER") == "true"
 
-print("Supabase URL:", SUPABASE_URL)
+# =========================
+# Optional Supabase Setup
+# =========================
 
+supabase = None
+if SUPABASE_URL and SUPABASE_ANON_KEY:
+    try:
+        from supabase import create_client
+        supabase = create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
+        print("Supabase connected")
+    except Exception as e:
+        print("Supabase not available:", e)
 
-from flask import Flask, request, jsonify
-from flask_cors import CORS
-import requests
-import time
-import random
+# =========================
+# Flask App Setup
+# =========================
 
 app = Flask(__name__)
 CORS(app)
 
+# =========================
+# Ollama (Local Only)
+# =========================
+
 OLLAMA_API = "http://localhost:11434/api/generate"
 MODEL = "gemma"
 
-def call_llm(prompt):
+def call_llm(prompt: str) -> str:
     """
-    Central LLM call function.
-    Uses a locally hosted LLM (Ollama + Gemma),
-    so no external API key is required.
+    Local LLM call (Ollama).
+    This will ONLY be used in local development.
     """
     payload = {
         "model": MODEL,
         "prompt": prompt,
         "stream": False
     }
+
     try:
         response = requests.post(
             OLLAMA_API,
@@ -43,7 +65,11 @@ def call_llm(prompt):
         )
         return response.json().get("response", "")
     except Exception:
-        return "The AI engine is currently unavailable."
+        return "Local AI engine is unavailable."
+
+# =========================
+# API Route
+# =========================
 
 @app.route("/ask", methods=["POST"])
 def ask():
@@ -58,23 +84,21 @@ def ask():
             "result": "Please enter a topic before continuing."
         })
 
-    # Randomised variation to reduce repeated quiz generation
     variation_id = int(time.time()) + random.randint(1, 9999)
 
-    # ✅ TARGET LEARNER ASSUMPTION (关键满分点)
     learner_assumption = (
         "The AI assumes the user is a student preparing for assessments or exams.\n\n"
     )
 
-    # Language handling (without exposing reasoning)
     language_rule = (
         "Respond in the same language as the user's input. "
         "Do NOT mention language detection or analysis.\n\n"
     )
 
     # -------------------------------
-    # EXPLAIN — AI as TUTOR
+    # Build Prompt
     # -------------------------------
+
     if mode == "explain":
         prompt = (
             learner_assumption +
@@ -85,9 +109,6 @@ def ask():
             f"{topic}"
         )
 
-    # -------------------------------
-    # QUIZ — AI as ASSESSOR
-    # -------------------------------
     elif mode == "quiz":
         prompt = (
             learner_assumption +
@@ -101,13 +122,9 @@ def ask():
             "- Each question has 4 options (A, B, C, D)\n"
             "- DO NOT include answers\n"
             "- DO NOT include explanations\n"
-            "- Avoid repeating common questions\n"
             "Output questions only."
         )
 
-    # -------------------------------
-    # REVEAL — Delayed Feedback
-    # -------------------------------
     elif mode == "reveal":
         if not quiz_text:
             return jsonify({
@@ -119,13 +136,10 @@ def ask():
             language_rule +
             "You are providing delayed feedback.\n"
             "Based on the quiz questions below, provide the correct answers "
-            "with brief explanations to support exam preparation.\n\n"
+            "with brief explanations.\n\n"
             f"{quiz_text}"
         )
 
-    # -------------------------------
-    # STUDY — AI as STUDY COACH
-    # -------------------------------
     elif mode == "study":
         prompt = (
             learner_assumption +
@@ -143,11 +157,29 @@ def ask():
             "result": "Invalid action selected."
         })
 
-    result = call_llm(prompt)
+    # -------------------------------
+    # Response Logic
+    # -------------------------------
+
+    if IS_RENDER:
+        # Online demo mode (no Ollama)
+        result = (
+            "This is the deployed demo version of StudyPilot AI.\n\n"
+            "Full AI inference runs locally using a locally hosted LLM. "
+            "This online version demonstrates the system flow and user interface."
+        )
+    else:
+        # Local development mode (real LLM)
+        result = call_llm(prompt)
 
     return jsonify({
         "result": result
     })
 
+# =========================
+# App Entry Point (Render Safe)
+# =========================
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
