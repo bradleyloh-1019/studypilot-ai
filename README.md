@@ -110,94 +110,104 @@ B-->F
 
 This diagram represents a closed-loop system architecture where all AI processing is performed locally. The frontend manages user interaction, the backend enforces learning logic, and the AI runtime handles content generation.
 
-🔧 Component-Level Architecture
-Frontend (HTML / CSS / JavaScript)
+---
+
+## 🔧 Component-Level Architecture
+
+### Frontend (HTML / CSS / JavaScript)
+
 The frontend is responsible for user interaction and presentation. Its responsibilities include:
 
-Capturing user input such as topic selection and learning mode
+- Capturing user input such as topic selection and learning mode  
+- Displaying AI-generated explanations, quizzes, and study tips  
+- Rendering multiple-choice quiz questions with selectable options  
+- Providing navigation between learning stages  
 
-Displaying AI-generated explanations, quizzes, and study tips
+The frontend contains **no AI logic**, ensuring a clear separation of concerns.
 
-Rendering multiple-choice quiz questions with selectable options
+---
 
-Providing navigation between learning stages
+### Backend API (Flask – app.py)
 
-The frontend contains no AI logic, ensuring a clear separation of concerns.
-
-Backend API (Flask – app.py)
 The Flask backend serves as the core control layer of the system. It is responsible for:
 
-Receiving and validating requests from the frontend
-
-Enforcing the learning workflow (Explain → Quiz → Reveal → Study)
-
-Managing temporary state such as the current topic and quiz context
-
-Constructing role-based AI prompts
-
-Preventing invalid actions (e.g. revealing answers without a quiz)
+- Receiving and validating requests from the frontend  
+- Enforcing the learning workflow (Explain → Quiz → Reveal → Study)  
+- Managing temporary state such as the current topic and quiz context  
+- Constructing role-based AI prompts  
+- Preventing invalid actions (e.g. revealing answers without a quiz)  
 
 By centralising logic in the backend, consistency in learning behaviour is maintained.
 
-Ollama Runtime
-Ollama functions as the local AI runtime responsible for executing AI prompts. It receives prompt instructions from the backend and performs model inference locally without requiring internet connectivity or external API keys.
+---
 
-Gemma Large Language Model
+### Ollama Runtime
+
+Ollama functions as the local AI runtime responsible for executing AI prompts. It:
+
+- Receives prompt instructions from the backend  
+- Performs model inference locally  
+- Requires no internet connectivity or external API keys  
+
+---
+
+### Gemma Large Language Model
+
 Gemma is the Large Language Model used by StudyPilot AI. It is responsible for:
 
-Generating concept explanations
+- Generating concept explanations  
+- Creating assessment-style quiz questions  
+- Producing delayed feedback for answer revelation  
+- Providing study tips and revision strategies  
 
-Creating assessment-style quiz questions
+The model operates entirely on the local machine, ensuring **privacy, security, and independence** from cloud-based AI services.
 
-Producing delayed feedback for answer revelation
+---
 
-Providing study tips and revision strategies
+## 🔄 Detailed Execution Flow
 
-The model operates entirely on the local machine, ensuring privacy, security, and independence from cloud-based AI services.
+1. The user selects a topic and learning action from the frontend  
+2. The frontend sends the request to the backend as a JSON payload  
+3. The backend validates the input and determines the learning stage  
+4. A role-specific prompt is constructed based on the learner assumption  
+5. The prompt is sent to the Ollama runtime  
+6. The Gemma model generates the requested output  
+7. The output is returned to the backend  
+8. The backend sends the processed response to the frontend  
+9. The frontend renders the result and enables the next learning action  
 
-🔄 Detailed Execution Flow
-The user selects a topic and learning action from the frontend.
+This structured execution flow ensures controlled and educationally intentional AI behaviour.
 
-The frontend sends the request to the backend as a JSON payload.
+---
 
-The backend validates the input and determines the learning stage.
+## 🤖 AI Model & Deployment
 
-A role-specific prompt is constructed based on the learner assumption.
+- **Model:** Gemma (Google open-source LLM)  
+- **Runtime:** Ollama  
+- **Deployment:** Local machine (offline-capable)  
 
-The prompt is sent to the Ollama runtime.
+### Advantages
 
-The Gemma model generates the requested output.
+- No dependency on external APIs  
+- No API key exposure  
+- Improved privacy  
+- No usage quotas  
 
-The output is returned to the backend.
+---
 
-The backend sends the processed response to the frontend.
+## 🔐 Responsible AI & Safety Considerations
 
-The frontend renders the result and enables the next appropriate learning action.
+- No user data is stored or logged  
+- No external AI services are accessed  
+- No API keys are exposed  
+- AI reasoning is not shown to users  
+- System is designed strictly for educational purposes  
 
-This structured execution flow ensures controlled, educationally intentional AI behaviour.
+---
 
-🤖 AI Model & Deployment
-Model: Gemma (Google open-source LLM)
+## 📂 Project Structure
 
-Runtime: Ollama
-
-Deployment: Local machine (offline-capable)
-
-This approach eliminates dependency on external APIs, avoids API key exposure, improves privacy, and prevents quota-based limitations.
-
-🔐 Responsible AI & Safety Considerations
-No user data is stored or logged
-
-No external AI services are accessed
-
-No API keys are exposed
-
-AI reasoning is not displayed to users
-
-The system is designed strictly for educational purposes
-
-📂 Project Structure
-Plaintext
+```plaintext
 StudyPilot-AI/
 ├── backend/
 │   ├── app.py
@@ -209,30 +219,3 @@ StudyPilot-AI/
 │   └── script.js
 │
 └── README.md
-▶️ How to Run the Project
-Backend Setup
-Bash
-cd backend
-pip install -r requirements.txt
-python app.py
-The backend will run at: http://127.0.0.1:5000
-
-Frontend Setup
-Open the frontend directly in a browser by launching:
-frontend/index.html
-
-📈 Project Strengths
-AI is central to all system functionality
-
-Clear, structured learning workflow
-
-Multi-subject support without syllabus lock-in
-
-Offline-capable and privacy-focused
-
-No reliance on external APIs or API keys
-
-Designed with explicit pedagogical intent
-
-✅ Conclusion
-StudyPilot AI demonstrates the effective application of generative AI in education by combining intelligent content generation with structured learning design. Through role-based AI behaviour, delayed feedback, and learning-stage awareness, the system supports students in understanding concepts, self-assessing knowledge, and improving exam readiness.
