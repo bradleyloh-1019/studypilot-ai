@@ -7,21 +7,33 @@
 </head>
 <body>
 
+<div class="app-container">
   <h1>StudyPilot AI</h1>
-  <p>Your Smart Learning Assistant</p>
+  <p class="subtitle">Your Smart Learning Assistant</p>
 
-  <input id="topic" type="text" placeholder="Enter a topic (e.g. Binary Search)">
+  <div class="input-card">
+    <input id="topic" placeholder="Ask about any subject">
+    <select id="mode">
+      <option value="explain">Explain Concept</option>
+      <option value="quiz">Generate Quiz</option>
+      <option value="study">Study Tips</option>
+    </select>
+    <button onclick="askAI()">Ask AI</button>
+  </div>
 
-  <select id="mode">
-    <option value="explain">Explain Concept</option>
-    <option value="quiz">Generate Quiz</option>
-    <option value="study">Study Advice</option>
-  </select>
+  <div class="result-card">
+    <h3>AI Result</h3>
+    <div id="output">AI response will appear here…</div>
+  </div>
 
-  <button onclick="askAI()">Ask AI</button>
+  <div id="actions" class="actions hidden">
+    <button onclick="nextAction('quiz')">New Quiz</button>
+    <button onclick="nextAction('explain')">Explain Topic</button>
+    <button onclick="nextAction('study')">Study Tips</button>
+    <button onclick="nextAction('reveal')">Reveal Answers</button>
+  </div>
+</div>
 
-  <pre id="output">AI response will appear here...</pre>
-
-  <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

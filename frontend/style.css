@@ -1,22 +1,53 @@
 body {
-  font-family: Arial, sans-serif;
-  max-width: 700px;
-  margin: 40px auto;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: #f5f7fb;
+  margin: 0;
 }
 
-input, select, button {
+.app-container {
+  max-width: 720px;
+  margin: 60px auto;
+}
+
+h1 {
+  text-align: center;
+}
+
+.subtitle {
+  text-align: center;
+  color: #6b7280;
+}
+
+.input-card,
+.result-card {
+  background: white;
+  padding: 24px;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  margin-top: 24px;
+}
+
+input, select {
   width: 100%;
-  margin: 10px 0;
-  padding: 10px;
+  padding: 12px;
+  margin-top: 12px;
 }
 
 button {
+  margin-top: 12px;
+  padding: 12px;
+  width: 100%;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 10px;
   cursor: pointer;
-  font-weight: bold;
 }
 
-pre {
-  background-color: #f4f4f4;
-  padding: 15px;
-  white-space: pre-wrap;
+.actions button {
+  background: #1e40af;
+}
+
+.hidden {
+  display: none;
 }
