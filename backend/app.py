@@ -1,3 +1,17 @@
+import os
+from dotenv import load_dotenv
+from supabase import create_client
+
+load_dotenv()  
+
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_ANON_KEY = os.getenv("SUPABASE_ANON_KEY")
+
+supabase = create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+print("Supabase URL:", SUPABASE_URL)
+
+
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import requests
