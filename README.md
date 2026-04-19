@@ -106,6 +106,7 @@ O-->|Model Inference|L
 L-->|Generated Output|O
 O-->B
 B-->F
+```
 
 This diagram represents a closed-loop system architecture where all AI processing is performed locally. The frontend manages user interaction, the backend enforces learning logic, and the AI runtime handles content generation.
 
