@@ -120,7 +120,7 @@ graph TD
     L[Gemma LLM<br/>Local Model]
 
     U --> F
-    F -->|HTTP POST (JSON)| B
+    F -->|HTTP POST Request| B
     B -->|Prompt Request| O
     O -->|Model Inference| L
     L -->|Generated Output| O
