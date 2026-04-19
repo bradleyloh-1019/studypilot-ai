@@ -1,9 +1,9 @@
 # StudyPilot AI
 Your Smart AI Learning Assistant
 
-https://img.shields.io/badge/python-3.11-blue
-https://img.shields.io/badge/backend-flask-black
-https://img.shields.io/badge/AI-Gemma%20LLM-green
+![Python](https://img.shields.io/badge/python-3.11-blue)
+![Backend](https://img.shields.io/badge/backend-flask-black)
+![AI Model](https://img.shields.io/badge/AI-Gemma%20LLM-green)
 
 ---
 
@@ -51,22 +51,16 @@ Most AI tools provide instant answers but do not support a complete learning cyc
 - Tailors explanations for exam-oriented learning
 - Responds using the same language as the user’s input
 
----
-
 ### 2. Generate Quiz (AI as Assessor)
 - Generates assessment-style multiple-choice questions
 - Focuses on testing conceptual understanding
 - Answers are intentionally hidden to encourage self-attempt
 - Variation logic reduces repeated quiz generation
 
----
-
 ### 3. Reveal Answers (Delayed Feedback)
 - Answers are revealed only after a quiz is generated
 - Provides correct answers with concise explanations
 - Encourages active recall before feedback
-
----
 
 ### 4. Study Tips (AI as Study Coach)
 - Identifies key concepts to revise
@@ -79,17 +73,12 @@ Most AI tools provide instant answers but do not support a complete learning cyc
 
 StudyPilot AI is designed around established learning principles:
 
-### Active Recall
-Learners attempt quiz questions before seeing correct answers.
-
-### Delayed Feedback
-Separating quiz attempts from answer explanations improves retention.
-
-### Learning Stage Awareness
-The AI dynamically switches roles depending on learning stage:
-- Tutor for explanation
-- Assessor for testing
-- Study Coach for revision guidance
+* **Active Recall**: Learners attempt quiz questions before seeing correct answers.
+* **Delayed Feedback**: Separating quiz attempts from answer explanations improves retention.
+* **Learning Stage Awareness**: The AI dynamically switches roles depending on learning stage:
+  * *Tutor* for explanation
+  * *Assessor* for testing
+  * *Study Coach* for revision guidance
 
 ---
 
@@ -99,33 +88,24 @@ StudyPilot AI follows a client–server architecture with a locally hosted AI mo
 
 ### High-Level Architecture Overview
 
-User
-↓
-Frontend (HTML / CSS / JavaScript)
-↓
-Backend API (Flask – app.py)
-↓
-Local AI Runtime (Ollama)
-↓
-Large Language Model (Gemma)
+`User` ↓ `Frontend (HTML / CSS / JavaScript)` ↓ `Backend API (Flask – app.py)` ↓ `Local AI Runtime (Ollama)` ↓ `Large Language Model (Gemma)`
 
 ### Architecture Diagram
 
 ```mermaid
 graph TD
-    U[User]
-    F[Frontend UI<br/>HTML / CSS / JavaScript]
-    B[Backend API<br/>Flask app.py]
-    O[Ollama Runtime<br/>Local AI Server]
-    L[Gemma LLM<br/>Local Model]
-
-    U --> F
-    F -->|HTTP POST Request| B
-    B -->|Prompt Request| O
-    O -->|Model Inference| L
-    L -->|Generated Output| O
-    O --> B
-    B --> F
+U[User]
+F[Frontend UI<br/>HTML / CSS / JavaScript]
+B[Backend API<br/>Flask app.py]
+O[Ollama Runtime<br/>Local AI Server]
+L[Gemma LLM<br/>Local Model]
+U-->F
+F-->|HTTP POST Request|B
+B-->|Prompt Request|O
+O-->|Model Inference|L
+L-->|Generated Output|O
+O-->B
+B-->F
 
 This diagram represents a closed-loop system architecture where all AI processing is performed locally. The frontend manages user interaction, the backend enforces learning logic, and the AI runtime handles content generation.
 
@@ -134,8 +114,11 @@ Frontend (HTML / CSS / JavaScript)
 The frontend is responsible for user interaction and presentation. Its responsibilities include:
 
 Capturing user input such as topic selection and learning mode
+
 Displaying AI-generated explanations, quizzes, and study tips
+
 Rendering multiple-choice quiz questions with selectable options
+
 Providing navigation between learning stages
 
 The frontend contains no AI logic, ensuring a clear separation of concerns.
@@ -144,9 +127,13 @@ Backend API (Flask – app.py)
 The Flask backend serves as the core control layer of the system. It is responsible for:
 
 Receiving and validating requests from the frontend
+
 Enforcing the learning workflow (Explain → Quiz → Reveal → Study)
+
 Managing temporary state such as the current topic and quiz context
+
 Constructing role-based AI prompts
+
 Preventing invalid actions (e.g. revealing answers without a quiz)
 
 By centralising logic in the backend, consistency in learning behaviour is maintained.
@@ -158,44 +145,58 @@ Gemma Large Language Model
 Gemma is the Large Language Model used by StudyPilot AI. It is responsible for:
 
 Generating concept explanations
+
 Creating assessment-style quiz questions
+
 Producing delayed feedback for answer revelation
+
 Providing study tips and revision strategies
 
 The model operates entirely on the local machine, ensuring privacy, security, and independence from cloud-based AI services.
 
 🔄 Detailed Execution Flow
-
 The user selects a topic and learning action from the frontend.
+
 The frontend sends the request to the backend as a JSON payload.
+
 The backend validates the input and determines the learning stage.
+
 A role-specific prompt is constructed based on the learner assumption.
+
 The prompt is sent to the Ollama runtime.
+
 The Gemma model generates the requested output.
+
 The output is returned to the backend.
+
 The backend sends the processed response to the frontend.
+
 The frontend renders the result and enables the next appropriate learning action.
 
 This structured execution flow ensures controlled, educationally intentional AI behaviour.
 
 🤖 AI Model & Deployment
-
 Model: Gemma (Google open-source LLM)
+
 Runtime: Ollama
+
 Deployment: Local machine (offline-capable)
 
 This approach eliminates dependency on external APIs, avoids API key exposure, improves privacy, and prevents quota-based limitations.
 
 🔐 Responsible AI & Safety Considerations
-
 No user data is stored or logged
+
 No external AI services are accessed
+
 No API keys are exposed
+
 AI reasoning is not displayed to users
+
 The system is designed strictly for educational purposes
 
-
 📂 Project Structure
+Plaintext
 StudyPilot-AI/
 ├── backend/
 │   ├── app.py
@@ -207,28 +208,30 @@ StudyPilot-AI/
 │   └── script.js
 │
 └── README.md
-
-
 ▶️ How to Run the Project
 Backend Setup
-Shellcd backendpip install -r requirements.txtpython app.py显示更多行
-The backend will run at:
-http://127.0.0.1:5000
+Bash
+cd backend
+pip install -r requirements.txt
+python app.py
+The backend will run at: http://127.0.0.1:5000
 
 Frontend Setup
-Open the frontend directly in a browser:
+Open the frontend directly in a browser by launching:
 frontend/index.html
 
-
 📈 Project Strengths
-
 AI is central to all system functionality
-Clear, structured learning workflow
-Multi-subject support without syllabus lock-in
-Offline-capable and privacy-focused
-No reliance on external APIs or API keys
-Designed with explicit pedagogical intent
 
+Clear, structured learning workflow
+
+Multi-subject support without syllabus lock-in
+
+Offline-capable and privacy-focused
+
+No reliance on external APIs or API keys
+
+Designed with explicit pedagogical intent
 
 ✅ Conclusion
 StudyPilot AI demonstrates the effective application of generative AI in education by combining intelligent content generation with structured learning design. Through role-based AI behaviour, delayed feedback, and learning-stage awareness, the system supports students in understanding concepts, self-assessing knowledge, and improving exam readiness.
