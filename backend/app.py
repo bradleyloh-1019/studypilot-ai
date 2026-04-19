@@ -3,7 +3,7 @@ import time
 import random
 import requests
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 
 # =========================
@@ -14,7 +14,6 @@ SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_ANON_KEY = os.getenv("SUPABASE_ANON_KEY")
 
 IS_RENDER = os.getenv("RENDER") == "true"
-
 
 # =========================
 # Optional Supabase Setup
@@ -33,8 +32,20 @@ if SUPABASE_URL and SUPABASE_ANON_KEY:
 # Flask App Setup
 # =========================
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="../frontend")
 CORS(app)
+
+# =========================
+# Frontend Routes (关键)
+# =========================
+
+@app.route("/")
+def serve_index():
+    return send_from_directory("../frontend", "index.html")
+
+@app.route("/<path:path>")
+def serve_static_files(path):
+    return send_from_directory("../frontend", path)
 
 # =========================
 # Ollama (Local Only)
@@ -44,16 +55,11 @@ OLLAMA_API = "http://localhost:11434/api/generate"
 MODEL = "gemma"
 
 def call_llm(prompt: str) -> str:
-    """
-    Local LLM call (Ollama).
-    This will ONLY be used in local development.
-    """
     payload = {
         "model": MODEL,
         "prompt": prompt,
         "stream": False
     }
-
     try:
         response = requests.post(
             OLLAMA_API,
@@ -77,9 +83,7 @@ def ask():
     quiz_text = data.get("quizText", "").strip()
 
     if not topic:
-        return jsonify({
-            "result": "Please enter a topic before continuing."
-        })
+        return jsonify({"result": "Please enter a topic before continuing."})
 
     variation_id = int(time.time()) + random.randint(1, 9999)
 
@@ -92,17 +96,12 @@ def ask():
         "Do NOT mention language detection or analysis.\n\n"
     )
 
-    # -------------------------------
-    # Build Prompt
-    # -------------------------------
-
     if mode == "explain":
         prompt = (
             learner_assumption +
             language_rule +
             "You are acting as a tutor.\n"
-            "Explain the following topic clearly and directly, "
-            "focusing on exam-relevant understanding.\n\n"
+            "Explain the following topic clearly and directly.\n\n"
             f"{topic}"
         )
 
@@ -111,29 +110,19 @@ def ask():
             learner_assumption +
             language_rule +
             "You are acting as an assessor.\n"
-            "Generate assessment questions to test understanding "
-            "of the following subject.\n\n"
-            f"Topic:\n{topic}\n"
-            f"Variation ID: {variation_id}\n\n"
             "Generate exactly 5 multiple-choice questions.\n"
-            "- Each question has 4 options (A, B, C, D)\n"
-            "- DO NOT include answers\n"
-            "- DO NOT include explanations\n"
-            "Output questions only."
+            "- 4 options (A–D)\n"
+            "- No answers\n\n"
+            f"{topic}"
         )
 
     elif mode == "reveal":
         if not quiz_text:
-            return jsonify({
-                "result": "Please attempt a quiz before revealing the answers."
-            })
-
+            return jsonify({"result": "Please attempt a quiz before revealing answers."})
         prompt = (
             learner_assumption +
             language_rule +
-            "You are providing delayed feedback.\n"
-            "Based on the quiz questions below, provide the correct answers "
-            "with brief explanations.\n\n"
+            "Provide correct answers with brief explanations.\n\n"
             f"{quiz_text}"
         )
 
@@ -142,39 +131,26 @@ def ask():
             learner_assumption +
             language_rule +
             "You are acting as a study coach.\n"
-            "Provide practical revision advice for the following subject.\n\n"
-            f"{topic}\n\n"
-            "- Key concepts to focus on\n"
-            "- Common exam-related mistakes\n"
-            "- Effective revision strategies"
+            "Give study tips, common mistakes, and strategies.\n\n"
+            f"{topic}"
         )
 
     else:
-        return jsonify({
-            "result": "Invalid action selected."
-        })
-
-    # -------------------------------
-    # Response Logic
-    # -------------------------------
+        return jsonify({"result": "Invalid action selected."})
 
     if IS_RENDER:
-        # Online demo mode (no Ollama)
         result = (
             "This is the deployed demo version of StudyPilot AI.\n\n"
-            "Full AI inference runs locally using a locally hosted LLM. "
-            "This online version demonstrates the system flow and user interface."
+            "Full AI inference runs locally. "
+            "This online version demonstrates the system flow and UI."
         )
     else:
-        # Local development mode (real LLM)
         result = call_llm(prompt)
 
-    return jsonify({
-        "result": result
-    })
+    return jsonify({"result": result})
 
 # =========================
-# App Entry Point (Render Safe)
+# App Entry Point
 # =========================
 
 if __name__ == "__main__":
