@@ -1,19 +1,9 @@
-## Getting Started
-
-This project requires Python and a locally running Ollama LLM.
-
-To run the project:
-1. Start the Flask backend
-2. Open the frontend in a web browser
-
 # StudyPilot AI
 Your Smart AI Learning Assistant
 
-
-![Python](https://img.shields.io/badge/python-3.11-blue)
-![Flask](https://img.shields.io/badge/backend-flask-black)
-![AI](https://img.shields.io/badge/AI-Gemma%20LLM-green)
-
+https://img.shields.io/badge/python-3.11-blue
+https://img.shields.io/badge/backend-flask-black
+https://img.shields.io/badge/AI-Gemma%20LLM-green
 
 ---
 
@@ -31,26 +21,26 @@ StudyPilot AI is designed with a clear learner assumption:
 
 **The system assumes the user is a student preparing for assessments or examinations at secondary, pre-university, or diploma level.**
 
-This learner assumption is embedded directly into the backend AI prompt design and affects:
+This learner assumption is embedded directly into the backend AI logic and influences:
 - The tone and depth of explanations
-- The difficulty and structure of quiz questions
+- The structure and difficulty of quiz questions
 - The timing of feedback delivery
 - The nature of study advice provided
 
-All responses prioritise exam-relevant understanding rather than casual discussion.
+All outputs prioritise exam-relevant understanding rather than casual discussion.
 
 ---
 
 ## ❓ Problem Statement
 
 Many students struggle with:
-- Understanding abstract academic concepts
+- Understanding abstract or unfamiliar academic concepts
 - Identifying gaps in their own knowledge
 - Practicing effective self-assessment
-- Receiving useful feedback after quizzes
-- Structuring efficient revision strategies
+- Receiving meaningful feedback after quizzes
+- Structuring efficient exam revision strategies
 
-Most existing AI tools provide instant answers but fail to support a complete learning cycle. StudyPilot AI addresses this gap by integrating AI into a structured educational workflow that encourages active learning and reflection.
+Most AI tools provide instant answers but do not support a complete learning cycle. StudyPilot AI addresses this gap by integrating AI into a structured educational workflow that encourages active learning and reflection.
 
 ---
 
@@ -64,10 +54,10 @@ Most existing AI tools provide instant answers but fail to support a complete le
 ---
 
 ### 2. Generate Quiz (AI as Assessor)
-- Generates multiple-choice questions for self-assessment
+- Generates assessment-style multiple-choice questions
 - Focuses on testing conceptual understanding
-- Answers are intentionally hidden to encourage user attempt
-- Variation logic reduces repetitive quiz generation
+- Answers are intentionally hidden to encourage self-attempt
+- Variation logic reduces repeated quiz generation
 
 ---
 
@@ -109,30 +99,15 @@ StudyPilot AI follows a client–server architecture with a locally hosted AI mo
 
 ### High-Level Architecture Overview
 
-StudyPilot AI adopts a client–server architecture where all AI processing is handled locally.  
-The system is designed to ensure that AI logic is central to the learning workflow while keeping the overall structure simple, secure, and easy to understand.
-
-At a high level, the system consists of four main layers:
-
-- User Interface (Frontend)
-- Application Logic (Backend)
-- AI Runtime
-- Large Language Model
-
-The overall execution flow is as follows:
-
-1. The user enters a topic and selects a learning action (Explain, Quiz, or Study Tips) from the frontend interface.
-2. The frontend sends the user request to the backend using an HTTP POST request in JSON format.
-3. The Flask backend receives the request and validates the input.
-4. Based on the selected action, the backend determines the current learning stage and assigns an appropriate AI role (Tutor, Assessor, or Study Coach).
-5. A role-specific prompt is constructed, incorporating the learner assumption that the user is preparing for assessments or examinations.
-6. The prompt is sent to the Ollama runtime for local AI processing.
-7. The Gemma Large Language Model performs inference and generates the requested output.
-8. The AI-generated result is returned to the backend.
-9. The backend forwards the response to the frontend.
-10. The frontend displays the output to the user, allowing further interaction or progression to the next learning stage.
-
----
+User
+↓
+Frontend (HTML / CSS / JavaScript)
+↓
+Backend API (Flask – app.py)
+↓
+Local AI Runtime (Ollama)
+↓
+Large Language Model (Gemma)
 
 ### Architecture Diagram
 
@@ -152,18 +127,18 @@ graph TD
     O --> B
     B --> F
 
-    This diagram represents a closed-loop system in which all AI processing is performed locally. The frontend manages user interaction, the backend enforces learning logic, and the AI runtime handles content generation.
+This diagram represents a closed-loop system architecture where all AI processing is performed locally. The frontend manages user interaction, the backend enforces learning logic, and the AI runtime handles content generation.
 
-Component-Level Architecture
+🔧 Component-Level Architecture
 Frontend (HTML / CSS / JavaScript)
-The frontend is responsible for user interaction and presentation. Its key responsibilities include:
+The frontend is responsible for user interaction and presentation. Its responsibilities include:
 
 Capturing user input such as topic selection and learning mode
 Displaying AI-generated explanations, quizzes, and study tips
 Rendering multiple-choice quiz questions with selectable options
 Providing navigation between learning stages
 
-The frontend does not contain any AI logic, ensuring a clean separation of concerns.
+The frontend contains no AI logic, ensuring a clear separation of concerns.
 
 Backend API (Flask – app.py)
 The Flask backend serves as the core control layer of the system. It is responsible for:
@@ -171,13 +146,13 @@ The Flask backend serves as the core control layer of the system. It is responsi
 Receiving and validating requests from the frontend
 Enforcing the learning workflow (Explain → Quiz → Reveal → Study)
 Managing temporary state such as the current topic and quiz context
-Constructing role-based prompts for the AI
+Constructing role-based AI prompts
 Preventing invalid actions (e.g. revealing answers without a quiz)
 
 By centralising logic in the backend, consistency in learning behaviour is maintained.
 
 Ollama Runtime
-Ollama functions as the local AI runtime responsible for executing AI prompts. It receives prompt instructions from the backend and handles inference locally without requiring internet access or external API keys.
+Ollama functions as the local AI runtime responsible for executing AI prompts. It receives prompt instructions from the backend and performs model inference locally without requiring internet connectivity or external API keys.
 
 Gemma Large Language Model
 Gemma is the Large Language Model used by StudyPilot AI. It is responsible for:
@@ -187,21 +162,73 @@ Creating assessment-style quiz questions
 Producing delayed feedback for answer revelation
 Providing study tips and revision strategies
 
-The model operates entirely on the local machine, ensuring privacy and security.
+The model operates entirely on the local machine, ensuring privacy, security, and independence from cloud-based AI services.
 
-Detailed Execution Flow
-The system executes requests in the following sequence:
+🔄 Detailed Execution Flow
 
-The user selects a topic and a learning action from the frontend.
+The user selects a topic and learning action from the frontend.
 The frontend sends the request to the backend as a JSON payload.
-The backend validates the request and determines the learning stage.
+The backend validates the input and determines the learning stage.
 A role-specific prompt is constructed based on the learner assumption.
-The prompt is sent to the Ollama runtime for processing.
-The Gemma model generates the requested content.
-Ollama returns the result to the backend.
-The backend returns the processed response to the frontend.
-The frontend renders the output and enables the next appropriate learning action.
+The prompt is sent to the Ollama runtime.
+The Gemma model generates the requested output.
+The output is returned to the backend.
+The backend sends the processed response to the frontend.
+The frontend renders the result and enables the next appropriate learning action.
 
-This structured data flow ensures that AI behaviour is consistent, educationally intentional, and tightly integrated into the learning process.
+This structured execution flow ensures controlled, educationally intentional AI behaviour.
 
----
+🤖 AI Model & Deployment
+
+Model: Gemma (Google open-source LLM)
+Runtime: Ollama
+Deployment: Local machine (offline-capable)
+
+This approach eliminates dependency on external APIs, avoids API key exposure, improves privacy, and prevents quota-based limitations.
+
+🔐 Responsible AI & Safety Considerations
+
+No user data is stored or logged
+No external AI services are accessed
+No API keys are exposed
+AI reasoning is not displayed to users
+The system is designed strictly for educational purposes
+
+
+📂 Project Structure
+StudyPilot-AI/
+├── backend/
+│   ├── app.py
+│   └── requirements.txt
+│
+├── frontend/
+│   ├── index.html
+│   ├── style.css
+│   └── script.js
+│
+└── README.md
+
+
+▶️ How to Run the Project
+Backend Setup
+Shellcd backendpip install -r requirements.txtpython app.py显示更多行
+The backend will run at:
+http://127.0.0.1:5000
+
+Frontend Setup
+Open the frontend directly in a browser:
+frontend/index.html
+
+
+📈 Project Strengths
+
+AI is central to all system functionality
+Clear, structured learning workflow
+Multi-subject support without syllabus lock-in
+Offline-capable and privacy-focused
+No reliance on external APIs or API keys
+Designed with explicit pedagogical intent
+
+
+✅ Conclusion
+StudyPilot AI demonstrates the effective application of generative AI in education by combining intelligent content generation with structured learning design. Through role-based AI behaviour, delayed feedback, and learning-stage awareness, the system supports students in understanding concepts, self-assessing knowledge, and improving exam readiness.
