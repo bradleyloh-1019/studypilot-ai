@@ -261,3 +261,5 @@ Through role-based AI behaviour, delayed feedback, and learning-stage awareness,
 - Understanding concepts  
 - Self-assessing knowledge  
 - Improving exam readiness  
+
+Live Demo: https://studypilot-ai.onrender.com
