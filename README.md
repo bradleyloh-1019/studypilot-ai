@@ -219,3 +219,45 @@ StudyPilot-AI/
 │   └── script.js
 │
 └── README.md
+
+## ▶️ How to Run the Project
+
+### Backend Setup
+
+```bash
+cd backend
+pip install -r requirements.txt
+python app.py
+
+The backend will run at:  
+http://127.0.0.1:5000
+
+---
+
+### Frontend Setup
+
+Open the frontend directly in a browser:
+
+```plaintext
+frontend/index.html
+
+## 📈 Project Strengths
+
+- AI is central to all system functionality  
+- Clear and structured learning workflow  
+- Multi-subject support without syllabus lock-in  
+- Offline-capable and privacy-focused  
+- No reliance on external APIs or API keys  
+- Designed with explicit pedagogical intent  
+
+---
+
+## ✅ Conclusion
+
+StudyPilot AI demonstrates the effective application of generative AI in education by combining intelligent content generation with structured learning design.
+
+Through role-based AI behaviour, delayed feedback, and learning-stage awareness, the system supports students in:
+
+- Understanding concepts  
+- Self-assessing knowledge  
+- Improving exam readiness  
