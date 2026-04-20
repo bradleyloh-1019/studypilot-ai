@@ -1,71 +1,69 @@
-# StudyPilot AI
+# StudyPilot AI 🚀
 Your Smart AI Learning Assistant
 
 ![Python](https://img.shields.io/badge/python-3.11-blue)
 ![Backend](https://img.shields.io/badge/backend-flask-black)
-![AI Model](https://img.shields.io/badge/AI-Gemma%20LLM-green)
+![AI Model](https://img.shields.io/badge/AI-Gemini%202.5%20Flash-orange)
+![Feature](https://img.shields.io/badge/Feature-Multimodal%20Vision-purple)
+
+## 🏆 Hackathon Context: Project 2030 MyAI Future
+
+* **National Track Alignment:** Smart Education & Digital Inclusivity
+* **Malaysia's National Digital Agenda:** StudyPilot AI supports the national vision of democratising digital education. By providing an advanced, accessible AI tutor capable of multimodal analysis and automated grading, it bridges the educational resource gap, empowering Malaysian students from diverse backgrounds with hyper-personalised learning tools.
 
 ---
 
 ## 📘 Project Overview
 
-StudyPilot AI is an AI-powered learning assistant designed to support students in understanding academic concepts, assessing their knowledge, and improving exam preparation across multiple subjects.
+StudyPilot AI is an advanced, multimodal AI-powered learning assistant designed to support students in understanding complex academic concepts, assessing their knowledge, and improving exam preparation.
 
-Instead of functioning as a simple question–answer chatbot, StudyPilot AI guides learners through a structured learning workflow that includes concept explanation, self-testing, delayed feedback, and targeted study advice. The system is intentionally designed to reflect real educational and revision practices rather than instant-answer interactions.
+Unlike standard Q&A chatbots, StudyPilot AI functions as a complete educational ecosystem. It guides learners through a structured workflow: visual/textual concept explanation, dynamic self-testing, interactive automated grading, and targeted study advice.
 
 ---
 
 ## 🎯 Target Users & Learning Assumption
 
-StudyPilot AI is designed with a clear learner assumption:
-
 **The system assumes the user is a student preparing for assessments or examinations at secondary, pre-university, or diploma level.**
 
-This learner assumption is embedded directly into the backend AI logic and influences:
-- The tone and depth of explanations
-- The structure and difficulty of quiz questions
-- The timing of feedback delivery
-- The nature of study advice provided
-
-All outputs prioritise exam-relevant understanding rather than casual discussion.
-
----
+This learner assumption is embedded via carefully engineered Agent Prompts into the backend AI logic, influencing:
+- The tone and depth of explanations.
+- The structure and difficulty of generated multiple-choice questions.
+- The strictness and encouragement level of the automated grading system.
+- The nature of study advice provided.
 
 ## ❓ Problem Statement
 
 Many students struggle with:
-- Understanding abstract or unfamiliar academic concepts
-- Identifying gaps in their own knowledge
-- Practicing effective self-assessment
-- Receiving meaningful feedback after quizzes
-- Structuring efficient exam revision strategies
+- Understanding abstract or unfamiliar academic concepts from textbooks, charts, or diagrams.
+- Identifying gaps in their own knowledge through effective self-assessment.
+- Receiving immediate, highly personalized feedback after attempting practice questions.
+- Structuring efficient exam revision strategies.
 
-Most AI tools provide instant answers but do not support a complete learning cycle. StudyPilot AI addresses this gap by integrating AI into a structured educational workflow that encourages active learning and reflection.
+Most AI tools act as simple Q&A bots that spoon-feed answers, short-circuiting the learning process. StudyPilot AI addresses this gap by integrating state-of-the-art multimodal AI into a structured educational workflow that encourages active learning, critical thinking, and reflection.
 
 ---
 
 ## ✅ Core Features
 
-### 1. Explain Concept (AI as Tutor)
-- Explains academic topics across multiple subjects
-- Tailors explanations for exam-oriented learning
-- Responds using the same language as the user’s input
+### 1. Explain Concept (Multimodal Tutor)
+- **Text & Vision Support:** Users can type a topic or **upload an image** (e.g., a complex math formula, a science diagram, or a textbook page).
+- Explains academic topics clearly, tailoring the depth for exam-oriented learning.
+- Automatically responds in the language of the user's input.
 
-### 2. Generate Quiz (AI as Assessor)
-- Generates assessment-style multiple-choice questions
-- Focuses on testing conceptual understanding
-- Answers are intentionally hidden to encourage self-attempt
-- Variation logic reduces repeated quiz generation
+### 2. Generate Quiz (Dynamic Assessor)
+- Generates 5 assessment-style multiple-choice questions based on the text or uploaded image.
+- Focuses on testing conceptual understanding rather than simple memorization.
+- **Anti-Cheat Design:** Answers and explanations are strictly hidden during the generation phase to encourage genuine self-attempt.
 
-### 3. Reveal Answers (Delayed Feedback)
-- Answers are revealed only after a quiz is generated
-- Provides correct answers with concise explanations
-- Encourages active recall before feedback
+### 3. Submit & Auto-Grade (Interactive Feedback)
+- Replaces static "reveal answers" with an interactive grading system.
+- Users select their answers via radio buttons directly on the interface and click "Submit & Grade Quiz".
+- The AI strictly evaluates the submission, calculates the total score, highlights specific mistakes, and provides targeted, encouraging explanations to correct misunderstandings.
 
-### 4. Study Tips (AI as Study Coach)
-- Identifies key concepts to revise
-- Highlights common exam-related mistakes
-- Suggests practical and effective revision strategies
+### 4. Study Tips (AI Study Coach)
+- Analyzes the topic or uploaded material to identify key concepts for targeted revision.
+- Highlights common exam-related mistakes and pitfalls.
+- Suggests practical, highly effective revision strategies.
 
 ---
 
@@ -73,193 +71,110 @@ Most AI tools provide instant answers but do not support a complete learning cyc
 
 StudyPilot AI is designed around established learning principles:
 
-* **Active Recall**: Learners attempt quiz questions before seeing correct answers.
-* **Delayed Feedback**: Separating quiz attempts from answer explanations improves retention.
-* **Learning Stage Awareness**: The AI dynamically switches roles depending on learning stage:
-  * *Tutor* for explanation
-  * *Assessor* for testing
-  * *Study Coach* for revision guidance
-
----
+* **Multimodal Learning**: Supporting both textual and visual inputs caters to different learning materials and cognitive styles.
+* **Active Recall & Testing Effect**: Learners must actively retrieve information to answer quiz questions before receiving correct answers, which significantly improves retention.
+* **Targeted Interleaved Feedback**: Separating quiz attempts from answer explanations, and providing specific feedback on wrong choices, prevents the illusion of competence.
+* **Learning Stage Awareness**: The AI dynamically switches roles (Tutor → Assessor → Coach) depending on the user's current phase in the learning cycle.
 
 ## 🏗 System Architecture
 
-StudyPilot AI follows a client–server architecture with a locally hosted AI model.
+StudyPilot AI follows a modern client–server architecture integrated with Google's state-of-the-art cloud AI services.
 
 ### High-Level Architecture Overview
 
-`User` ↓ `Frontend (HTML / CSS / JavaScript)` ↓ `Backend API (Flask – app.py)` ↓ `Local AI Runtime (Ollama)` ↓ `Large Language Model (Gemma)`
+`User` ↓ `Frontend (HTML / CSS / JS)` ↓ `Backend API (Flask)` ↓ `Google Gemini API (Gemini 2.5 Flash)`
 
 ### Architecture Diagram
 
 ```mermaid
 graph TD
 U[User]
-F[Frontend UI<br/>HTML / CSS / JavaScript]
+F[Frontend UI<br/>HTML / CSS / Vanilla JS]
 B[Backend API<br/>Flask app.py]
-O[Ollama Runtime<br/>Local AI Server]
-L[Gemma LLM<br/>Local Model]
-U-->F
-F-->|HTTP POST Request|B
-B-->|Prompt Request|O
-O-->|Model Inference|L
-L-->|Generated Output|O
-O-->B
-B-->F
-```
+G[Google Gemini API<br/>Gemini 2.5 Flash Multimodal]
 
-This diagram represents a closed-loop system architecture where all AI processing is performed locally. The frontend manages user interaction, the backend enforces learning logic, and the AI runtime handles content generation.
+U-->|Input Text & Upload Image|F
+F-->|HTTP POST Request<br/>JSON + Base64 Image|B
+B-->|System Prompt + Multimodal Payload|G
+G-->|Generated Text / Markdown|B
+B-->|Parsed Response|F
+
+This diagram represents a scalable, cloud-connected system. The frontend manages user interaction and image preprocessing, the backend enforces learning logic and securely handles API communication, and the Gemini API handles complex multimodal inference.
 
 ---
 
 ## 🔧 Component-Level Architecture
 
-### Frontend (HTML / CSS / JavaScript)
+### 1. Frontend (HTML / CSS / JavaScript)
+The frontend is responsive, lightweight, and built without heavy frameworks to ensure maximum accessibility. Its responsibilities include:
+- Capturing textual input and **processing image uploads** (converting images to Base64).
+- Sending payloads (Topic + Mode + Image Data + User Answers) to the backend.
+- Parsing and rendering AI-generated Markdown (using `marked.js`) for highly readable academic text.
+- Dynamically generating interactive quiz forms and capturing user selections for the auto-grading system.
 
-The frontend is responsible for user interaction and presentation. Its responsibilities include:
+### 2. Backend API (Flask – `app.py`)
+The Flask backend serves as the core control layer and security gatekeeper. It is responsible for:
+- Receiving and validating requests from the frontend.
+- **Dynamic Prompt Engineering:** Reading carefully crafted markdown files from the `/agent` directory to assign specific "personas" (Explainer, Assessor, Coach) to the AI.
+- Formatting multimodal payloads (merging user text, Base64 images, and system instructions) to comply with the Google Gemini API structure.
+- Securing the `GEMINI_API_KEY` (preventing exposure to the client-side).
 
-- Capturing user input such as topic selection and learning mode  
-- Displaying AI-generated explanations, quizzes, and study tips  
-- Rendering multiple-choice quiz questions with selectable options  
-- Providing navigation between learning stages  
-
-The frontend contains **no AI logic**, ensuring a clear separation of concerns.
-
----
-
-### Backend API (Flask – app.py)
-
-The Flask backend serves as the core control layer of the system. It is responsible for:
-
-- Receiving and validating requests from the frontend  
-- Enforcing the learning workflow (Explain → Quiz → Reveal → Study)  
-- Managing temporary state such as the current topic and quiz context  
-- Constructing role-based AI prompts  
-- Preventing invalid actions (e.g. revealing answers without a quiz)  
-
-By centralising logic in the backend, consistency in learning behaviour is maintained.
+### 3. AI Model: Google Gemini 2.5 Flash
+StudyPilot AI leverages **Gemini 2.5 Flash** due to its exceptional speed and native multimodal capabilities. It is responsible for:
+- Performing complex visual reasoning (e.g., extracting text from uploaded textbook pages, interpreting scientific diagrams).
+- Generating structured educational content, adaptive quizzes, and empathetic, strict grading feedback.
 
 ---
 
-### Ollama Runtime
+## 🔄 Detailed Execution Flow (Example: Auto-Grading)
 
-Ollama functions as the local AI runtime responsible for executing AI prompts. It:
+1. The user attempts a generated quiz on the frontend, selecting options via radio buttons.
+2. The user clicks "Submit & Grade Quiz". The frontend captures the selected answers (or flags skipped questions).
+3. The frontend sends a JSON payload containing the original quiz text and the user's answers to the backend under the `grade` mode.
+4. The backend loads the `study_feedback_agent.md` system prompt.
+5. The backend constructs a highly specific instruction, combining the system prompt, the original quiz, and the student's submission.
+6. The payload is sent securely to the **Gemini 2.5 Flash API**.
+7. Gemini evaluates the submission, calculates the score, and generates targeted explanations for incorrect answers.
+8. The backend returns this feedback to the frontend, which parses the Markdown and displays the interactive, personalized tutoring response.
 
-- Receives prompt instructions from the backend  
-- Performs model inference locally  
-- Requires no internet connectivity or external API keys  
+## 🚀 Live Demo & Deployment
 
----
+The application is professionally hosted on **Render**, providing a seamless, zero-installation experience for students and educators.
 
-### Gemma Large Language Model
-
-Gemma is the Large Language Model used by StudyPilot AI. It is responsible for:
-
-- Generating concept explanations  
-- Creating assessment-style quiz questions  
-- Producing delayed feedback for answer revelation  
-- Providing study tips and revision strategies  
-
-The model operates entirely on the local machine, ensuring **privacy, security, and independence** from cloud-based AI services.
+### 🌐 Access the Web App
+**[Click Here to Open StudyPilot AI](https://studypilot-ai-7fzx.onrender.com/)**
+*(Note: If the link takes a few seconds to load, the server is waking up from its idle state).*
 
 ---
 
-## 🔄 Detailed Execution Flow
+## 🛠 Cloud Infrastructure & Setup (Render)
 
-1. The user selects a topic and learning action from the frontend  
-2. The frontend sends the request to the backend as a JSON payload  
-3. The backend validates the input and determines the learning stage  
-4. A role-specific prompt is constructed based on the learner assumption  
-5. The prompt is sent to the Ollama runtime  
-6. The Gemma model generates the requested output  
-7. The output is returned to the backend  
-8. The backend sends the processed response to the frontend  
-9. The frontend renders the result and enables the next learning action  
+For those who wish to fork this repository and deploy their own instance on Render, follow the configuration below:
 
-This structured execution flow ensures controlled and educationally intentional AI behaviour.
+### 1. Repository Structure
+Ensure the backend and frontend are organized as follows to allow Render to serve the application correctly:
+- `/backend`: Contains `app.py` and `requirements.txt`.
+- `/frontend`: Contains all static UI assets (`index.html`, `style.css`, `script.js`).
 
----
+### 2. Render Web Service Configuration
+- **Runtime:** `Python`
+- **Root Directory:** `backend` (or `.` depending on your GitHub root)
+- **Build Command:** `pip install -r requirements.txt`
+- **Start Command:** `gunicorn app:app`
 
-## 🤖 AI Model & Deployment
+### 3. Environment Variables (Required)
+The system requires specific environment variables to be configured in the Render Dashboard (**Settings > Environment**). **DO NOT** hardcode these in your source code for security reasons.
 
-- **Model:** Gemma (Google open-source LLM)  
-- **Runtime:** Ollama  
-- **Deployment:** Local machine (offline-capable)  
-
-### Advantages
-
-- No dependency on external APIs  
-- No API key exposure  
-- Improved privacy  
-- No usage quotas  
+| Key | Description |
+| :--- | :--- |
+| `GEMINI_API_KEY` | Your Google Gemini API Key from [Google AI Studio](https://aistudio.google.com/). |
+| `SUPABASE_URL` | Your Supabase project URL (for database connectivity). |
+| `SUPABASE_ANON_KEY` | Your Supabase anonymous API key. |
 
 ---
 
-## 🔐 Responsible AI & Safety Considerations
-
-- No user data is stored or logged  
-- No external AI services are accessed  
-- No API keys are exposed  
-- AI reasoning is not shown to users  
-- System is designed strictly for educational purposes  
-
----
-
-## 📂 Project Structure
-
-```plaintext
-StudyPilot-AI/
-├── backend/
-│   ├── app.py
-│   └── requirements.txt
-│
-├── frontend/
-│   ├── index.html
-│   ├── style.css
-│   └── script.js
-│
-└── README.md
-
-## ▶️ How to Run the Project
-
-### Backend Setup
-
-```bash
-cd backend
-pip install -r requirements.txt
-python app.py
-
-The backend will run at:  
-http://127.0.0.1:5000
-
----
-
-### Frontend Setup
-
-Open the frontend directly in a browser:
-
-```plaintext
-frontend/index.html
-
-## 📈 Project Strengths
-
-- AI is central to all system functionality  
-- Clear and structured learning workflow  
-- Multi-subject support without syllabus lock-in  
-- Offline-capable and privacy-focused  
-- No reliance on external APIs or API keys  
-- Designed with explicit pedagogical intent  
-
----
-
-## ✅ Conclusion
-
-StudyPilot AI demonstrates the effective application of generative AI in education by combining intelligent content generation with structured learning design.
-
-Through role-based AI behaviour, delayed feedback, and learning-stage awareness, the system supports students in:
-
-- Understanding concepts  
-- Self-assessing knowledge  
-- Improving exam readiness  
-
-Live Demo: https://studypilot-ai.onrender.com
+## 🤖 AI Declaration
+In compliance with the **Project 2030: MyAI Future** hackathon rules:
+- **Core AI Engine:** Google Gemini 2.5 Flash.
+- **Code Assistance:** Parts of the boilerplate Flask structure and interactive quiz rendering logic were co-developed with AI assistance to ensure robust error handling and multimodal compatibility.
+- **Human Oversight:** All educational prompts and system architectures were manually designed to align with pedagogical principles.
