@@ -69,12 +69,12 @@ def get_agent_prompt(filename: str) -> str:
 def ask():
     data = request.json or {}
 
-    topic = data.get("topic", "").strip()
-    mode = data.get("mode", "").strip()
-    quiz_text = data.get("quizText", "").strip()
+    topic = (data.get("topic") or "").strip()
+    mode = (data.get("mode") or "").strip()
+    quiz_text = (data.get("quizText") or "").strip()
     image_data = data.get("image_data")
     image_mime_type = data.get("image_mime_type")
-    user_answers = data.get("user_answers", "").strip()
+    user_answers = (data.get("user_answers") or "").strip()
 
     if not topic and not image_data and mode != "grade":
         return jsonify({"result": "Please enter a topic or upload an image before continuing."})

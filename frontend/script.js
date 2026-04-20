@@ -55,7 +55,12 @@ function askAI(forceMode = null, extraData = null) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload)
   })
-    .then(res => res.json())
+    .then(async res => {
+      if (!res.ok) {
+        throw new Error(`Server returned status ${res.status}. Please check backend logs.`);
+      }
+      return res.json();
+    })
     .then(data => {
       if (mode === "quiz") {
         lastQuizText = data.result;
@@ -135,13 +140,13 @@ function submitQuiz(totalQuestions) {
     if (selected) {
       userAnswers.push(`Q${i}: ${selected.value}`);
     } else {
-      userAnswers.push(`Q${i}: Skipped (未作答)`);
+      userAnswers.push(`Q${i}: Skipped`);
       allAnswered = false;
     }
   }
 
   if (!allAnswered) {
-    if (!confirm("You haven't answered all questions. Are you sure you want to submit? (你有题目未作答，确定要交卷吗？)")) {
+    if (!confirm("You haven't answered all questions. Are you sure you want to submit?")) {
       return;
     }
   }
