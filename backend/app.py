@@ -6,6 +6,7 @@ import requests
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 
+# 环境变量配置
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_ANON_KEY = os.getenv("SUPABASE_ANON_KEY")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
@@ -25,10 +26,10 @@ def call_llm(prompt: str) -> str:
     if not GEMINI_API_KEY:
         return "GEMINI_API_KEY not set."
 
-    # 这里更新为了 gemini-1.5-flash
+    # 关键修复：使用稳定的 v1 接口和最新的 gemini-2.5-flash 模型
     url = (
-        "https://generativelanguage.googleapis.com/v1beta/"
-        f"models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
+        "https://generativelanguage.googleapis.com/v1/"
+        f"models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
     )
 
     payload = {
@@ -45,9 +46,11 @@ def call_llm(prompt: str) -> str:
         response = requests.post(url, json=payload, timeout=20)
         data = response.json()
 
+        # 处理 API 返回的内容
         if "candidates" in data:
             return data["candidates"][0]["content"]["parts"][0]["text"]
 
+        # 错误捕获处理
         if "error" in data:
             return f"Gemini error: {data['error'].get('message', 'Unknown error')}"
 
@@ -67,8 +70,10 @@ def ask():
     if not topic:
         return jsonify({"result": "Please enter a topic before continuing."})
 
+    # 生成随机 ID 以确保测验的多样性
     variation_id = int(time.time()) + random.randint(1, 9999)
 
+    # 提示词前缀
     learner_assumption = (
         "The AI assumes the user is a student preparing for assessments or exams.\n\n"
     )
@@ -77,6 +82,7 @@ def ask():
         "Respond in the same language as the user's input.\n\n"
     )
 
+    # 根据不同的模式构建 Prompt
     if mode == "explain":
         prompt = (
             learner_assumption +
@@ -117,9 +123,11 @@ def ask():
     else:
         return jsonify({"result": "Invalid action selected."})
 
+    # 调用模型并返回结果
     result = call_llm(prompt)
     return jsonify({"result": result})
 
 if __name__ == "__main__":
+    # 支持在 Render 等平台部署时自动获取端口
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
