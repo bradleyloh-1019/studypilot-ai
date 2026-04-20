@@ -12,7 +12,7 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
-    gemini_model = genai.GenerativeModel("gemini-pro")
+    gemini_model = genai.GenerativeModel("gemini-1.5-flash")
 else:
     gemini_model = None
 
@@ -41,8 +41,8 @@ def call_llm(prompt: str) -> str:
     try:
         response = gemini_model.generate_content(prompt)
         return response.text
-    except Exception:
-        return "Error generating response."
+    except Exception as e:
+        return f"Gemini error: {str(e)}"
 
 @app.route("/ask", methods=["POST"])
 def ask():
