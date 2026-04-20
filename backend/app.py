@@ -2,7 +2,6 @@ import os
 import time
 import random
 import requests
-
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 
@@ -21,7 +20,6 @@ def index():
 def static_files(path):
     return send_from_directory("../frontend", path)
 
-# 升级版 call_llm：支持接收图片数据
 def call_llm(prompt: str, image_data: str = None, mime_type: str = None) -> str:
     if not GEMINI_API_KEY:
         return "GEMINI_API_KEY not set."
@@ -33,7 +31,6 @@ def call_llm(prompt: str, image_data: str = None, mime_type: str = None) -> str:
 
     parts = [{"text": prompt}]
 
-    # 如果有图片，按照 Gemini 要求加入 payload
     if image_data and mime_type:
         parts.append({
             "inlineData": {
@@ -47,7 +44,7 @@ def call_llm(prompt: str, image_data: str = None, mime_type: str = None) -> str:
     }
 
     try:
-        response = requests.post(url, json=payload, timeout=30) # 图片处理可能稍慢，把超时改到30秒
+        response = requests.post(url, json=payload, timeout=30)
         data = response.json()
 
         if "candidates" in data:
@@ -75,19 +72,15 @@ def ask():
     topic = data.get("topic", "").strip()
     mode = data.get("mode", "").strip()
     quiz_text = data.get("quizText", "").strip()
-    
-    # 接收前端传来的图片数据
     image_data = data.get("image_data")
     image_mime_type = data.get("image_mime_type")
+    user_answers = data.get("user_answers", "").strip()
 
-    # 如果没有输入文字且没有图片，则拦截
-    if not topic and not image_data:
+    if not topic and not image_data and mode != "grade":
         return jsonify({"result": "Please enter a topic or upload an image before continuing."})
 
     variation_id = int(time.time()) + random.randint(1, 9999)
     language_rule = "CRITICAL: Respond in the same language as the user's input.\n\n"
-
-    # 如果用户只传了图片没写字，默认用 "this image" 替代 topic 防止报错
     safe_topic = topic if topic else "this image"
 
     if mode == "explain":
@@ -96,13 +89,20 @@ def ask():
 
     elif mode == "quiz":
         system_prompt = get_agent_prompt("quiz_generator_agent.md")
-        prompt = f"{system_prompt}\n\n{language_rule}Topic/Image: {safe_topic}\nVariation ID: {variation_id}"
+        prompt = f"{system_prompt}\n\n{language_rule}CRITICAL INSTRUCTION: ONLY output the questions and options (A-D). DO NOT generate or reveal the answers or explanations at the bottom.\n\nTopic/Image: {safe_topic}\nVariation ID: {variation_id}"
 
-    elif mode == "reveal":
-        system_prompt = get_agent_prompt("quiz_generator_agent.md")
+    elif mode == "grade":
+        system_prompt = get_agent_prompt("study_feedback_agent.md")
         if not quiz_text:
-            return jsonify({"result": "Please attempt a quiz before revealing answers."})
-        prompt = f"{system_prompt}\n\n{language_rule}Provide correct answers with brief explanations for this quiz:\n{quiz_text}"
+            return jsonify({"result": "Error: Quiz data missing."})
+        prompt = (
+            f"{system_prompt}\n\n{language_rule}"
+            f"Here is the quiz the student just took:\n{quiz_text}\n\n"
+            f"Here are the student's selected answers:\n{user_answers}\n\n"
+            f"Please act as a strict but encouraging tutor. Grade the quiz. "
+            f"Tell them their total score, point out which ones they got right/wrong, "
+            f"and provide the correct answers with brief explanations for their mistakes."
+        )
 
     elif mode == "study":
         system_prompt = get_agent_prompt("study_feedback_agent.md")
@@ -111,7 +111,6 @@ def ask():
     else:
         return jsonify({"result": "Invalid action selected."})
 
-    # 将图片数据一起传给模型
     result = call_llm(prompt, image_data, image_mime_type)
     return jsonify({"result": result})
 

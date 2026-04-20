@@ -86,12 +86,11 @@ button:hover {
   display: none !important;
 }
 
-/* --- Markdown 结果排版优化 --- */
 #output {
   line-height: 1.6;
   color: #374151;
   font-size: 16px;
-  overflow-wrap: break-word; /* 防止长文本或代码撑爆容器 */
+  overflow-wrap: break-word;
 }
 
 #output p {

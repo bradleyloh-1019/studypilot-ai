@@ -3,7 +3,6 @@ let lastQuizText = "";
 let currentImageBase64 = null; 
 let currentImageMimeType = null; 
 
-// 监听图片上传并转换为 Base64
 document.addEventListener('DOMContentLoaded', () => {
   const imageInput = document.getElementById('imageInput');
   if(imageInput) {
@@ -12,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (file) {
         const reader = new FileReader();
         reader.onload = function(event) {
-          // 提取纯 Base64 数据
           currentImageBase64 = event.target.result.split(',')[1];
           currentImageMimeType = file.type;
         };
@@ -25,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-function askAI(forceMode = null) {
+function askAI(forceMode = null, extraData = null) {
   const topicInput = document.getElementById("topic").value;
   const mode = forceMode || document.getElementById("mode").value;
   const output = document.getElementById("output");
@@ -35,8 +33,7 @@ function askAI(forceMode = null) {
     lastTopic = topicInput;
   }
 
-  // 验证：必须输入文字或者上传了图片
-  if (!lastTopic && !currentImageBase64) {
+  if (!lastTopic && !currentImageBase64 && mode !== 'grade') {
     alert("Please enter a topic or upload an image first.");
     return;
   }
@@ -49,7 +46,8 @@ function askAI(forceMode = null) {
     mode: mode,
     quizText: lastQuizText,
     image_data: currentImageBase64,       
-    image_mime_type: currentImageMimeType 
+    image_mime_type: currentImageMimeType,
+    user_answers: extraData
   };
 
   fetch("/ask", {
@@ -84,6 +82,7 @@ function renderQuiz(text) {
 
   const lines = text.split("\n");
   let qIndex = 0;
+  let htmlContent = "";
 
   lines.forEach(line => {
     const cleanLine = line.trim();
@@ -93,7 +92,7 @@ function renderQuiz(text) {
 
     if (/^\d+[\.\)]/.test(testLine)) {
       qIndex++;
-      output.innerHTML += `<div style="margin-top: 20px; margin-bottom: 10px;"><strong>${testLine}</strong></div>`;
+      htmlContent += `<div style="margin-top: 20px; margin-bottom: 10px;"><strong>${testLine}</strong></div>`;
       return;
     }
 
@@ -103,9 +102,9 @@ function renderQuiz(text) {
         const optionLetter = match[1];
         const optionText = match[2];
         
-        output.innerHTML += `
+        htmlContent += `
           <label>
-            <input type="radio" name="q${qIndex}">
+            <input type="radio" name="q${qIndex}" value="${optionLetter}">
             <strong>${optionLetter}.</strong> ${optionText}
           </label>
         `;
@@ -113,8 +112,42 @@ function renderQuiz(text) {
       return;
     }
 
-    output.innerHTML += `<p>${testLine}</p>`;
+    htmlContent += `<p>${testLine}</p>`;
   });
+
+  if (qIndex > 0) {
+    htmlContent += `
+      <div style="margin-top: 24px; text-align: center;">
+        <button onclick="submitQuiz(${qIndex})" style="background: #10b981; max-width: 250px;">Submit & Grade Quiz</button>
+      </div>
+    `;
+  }
+
+  output.innerHTML = htmlContent;
+}
+
+function submitQuiz(totalQuestions) {
+  let userAnswers = [];
+  let allAnswered = true;
+
+  for (let i = 1; i <= totalQuestions; i++) {
+    const selected = document.querySelector(`input[name="q${i}"]:checked`);
+    if (selected) {
+      userAnswers.push(`Q${i}: ${selected.value}`);
+    } else {
+      userAnswers.push(`Q${i}: Skipped (未作答)`);
+      allAnswered = false;
+    }
+  }
+
+  if (!allAnswered) {
+    if (!confirm("You haven't answered all questions. Are you sure you want to submit? (你有题目未作答，确定要交卷吗？)")) {
+      return;
+    }
+  }
+
+  const answersString = userAnswers.join(", ");
+  askAI('grade', answersString);
 }
 
 function nextAction(mode) {
