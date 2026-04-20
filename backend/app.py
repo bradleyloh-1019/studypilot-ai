@@ -1,28 +1,14 @@
 import os
 import time
 import random
+import requests
 
-import google.generativeai as genai
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_ANON_KEY = os.getenv("SUPABASE_ANON_KEY")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-
-if GEMINI_API_KEY:
-    genai.configure(api_key=GEMINI_API_KEY)
-    gemini_model = genai.GenerativeModel("gemini-pro")
-else:
-    gemini_model = None
-
-supabase = None
-if SUPABASE_URL and SUPABASE_ANON_KEY:
-    try:
-        from supabase import create_client
-        supabase = create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
-    except Exception:
-        supabase = None
 
 app = Flask(__name__, static_folder="../frontend")
 CORS(app)
@@ -36,11 +22,21 @@ def static_files(path):
     return send_from_directory("../frontend", path)
 
 def call_llm(prompt: str) -> str:
-    if not gemini_model:
-        return "AI service is unavailable."
+    if not GEMINI_API_KEY:
+        return "GEMINI_API_KEY not set."
+
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={GEMINI_API_KEY}"
+
+    payload = {
+        "contents": [{
+            "parts": [{"text": prompt}]
+        }]
+    }
+
     try:
-        response = gemini_model.generate_content(prompt)
-        return response.text
+        response = requests.post(url, json=payload, timeout=20)
+        data = response.json()
+        return data["candidates"][0]["content"]["parts"][0]["text"]
     except Exception as e:
         return f"Gemini error: {str(e)}"
 
