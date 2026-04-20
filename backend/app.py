@@ -25,9 +25,10 @@ def call_llm(prompt: str) -> str:
     if not GEMINI_API_KEY:
         return "GEMINI_API_KEY not set."
 
+    # 这里更新为了 gemini-1.5-flash
     url = (
         "https://generativelanguage.googleapis.com/v1beta/"
-        f"models/gemini-1.0-pro:generateContent?key={GEMINI_API_KEY}"
+        f"models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
     )
 
     payload = {
