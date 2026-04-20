@@ -17,7 +17,6 @@ CORS(app)
 def index():
     return send_from_directory("../frontend", "index.html")
 
-# ✅ 修正：不能用 &lt;path:path&gt;
 @app.route("/<path:path>")
 def static_files(path):
     return send_from_directory("../frontend", path)
@@ -28,20 +27,23 @@ def call_llm(prompt: str) -> str:
 
     url = (
         "https://generativelanguage.googleapis.com/v1beta/"
-        f"models/gemini-pro:generateContent?key={GEMINI_API_KEY}"
+        f"models/gemini-1.0-pro:generateContent?key={GEMINI_API_KEY}"
     )
 
     payload = {
-        "contents": [{
-            "parts": [{"text": prompt}]
-        }]
+        "contents": [
+            {
+                "parts": [
+                    {"text": prompt}
+                ]
+            }
+        ]
     }
 
     try:
         response = requests.post(url, json=payload, timeout=20)
         data = response.json()
 
-        # ✅ 防守式解析
         if "candidates" in data:
             return data["candidates"][0]["content"]["parts"][0]["text"]
 
