@@ -98,6 +98,7 @@ F-->|HTTP POST Request<br/>JSON + Base64 Image|B
 B-->|System Prompt + Multimodal Payload|G
 G-->|Generated Text / Markdown|B
 B-->|Parsed Response|F
+```
 
 This diagram represents a scalable, cloud-connected system. The frontend manages user interaction and image preprocessing, the backend enforces learning logic and securely handles API communication, and the Gemini API handles complex multimodal inference.
 
