@@ -174,6 +174,29 @@ The system requires specific environment variables to be configured in the Rende
 
 ---
 
+## 📸 Prototype Showcase
+
+> **Note to Evaluators:** If the [Live App Link](你的Render链接) returns a "High Demand" or "Quota Exceeded" error, it is due to the current traffic spikes on the Google Gemini 2.5 Flash free-tier API. Please refer to these screenshots and the **Video Demo** for full functional verification.
+
+### 1. Multimodal Tutor (Concept Explanation)
+*Leveraging Gemini 2.5 Flash to break down complex topics from text or image inputs.*
+![Concept Explanation](myaiproject.png)
+
+### 2. Dynamic Assessor (Quiz Generation)
+*Automatically generating conceptual multiple-choice questions based on the study material.*
+![Quiz Generation - History](myaiproject3.png)
+![Quiz Generation - Geography](myaiproject2.png)
+
+### 3. Interactive Grader (Auto-Grading & Feedback)
+*Providing interleaved, pedagogical feedback rather than just showing the correct answers.*
+![Interactive Grader](myaiproject4.png)
+
+### 4. AI Study Coach (Targeted Advice)
+*Strategic revision roadmaps and pitfall identification tailored to the student's progress.*
+![Study Tips](myaiproject5.png)
+
+---
+
 ## 🤖 AI Declaration
 In compliance with the **Project 2030: MyAI Future** hackathon rules:
 - **Core AI Engine:** Google Gemini 2.5 Flash.
