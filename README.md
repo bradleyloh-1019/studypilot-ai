@@ -197,8 +197,21 @@ The system requires specific environment variables to be configured in the Rende
 
 ---
 
-## 🤖 AI Declaration
-In compliance with the **Project 2030: MyAI Future** hackathon rules:
-- **Core AI Engine:** Google Gemini 2.5 Flash.
-- **Code Assistance:** Parts of the boilerplate Flask structure and interactive quiz rendering logic were co-developed with AI assistance to ensure robust error handling and multimodal compatibility.
-- **Human Oversight:** All educational prompts and system architectures were manually designed to align with pedagogical principles.
+### 🤖 AI Declaration & Collaboration Disclosure
+
+In compliance with the **Project 2030: MyAI Future** hackathon rules and **CSIS3053** academic integrity guidelines, this project was developed through a collaborative process between the student and various AI tools.
+
+**1. AI Tools & Roles**
+* Google Gemini 2.5 Flash (Core Engine)**: Integrated as the primary backend AI to power the Multimodal Tutor, Quiz Generation, and Interactive Grading logic.
+* Microsoft Copilot**: Utilized during the **Ideation Phase** for brainstorming the "StudyPilot" concept and defining the initial project scope.
+* Google Gemini (Chat Assistant)**:
+    * **Development & Debugging**: Assisted in writing the boilerplate Flask backend, implementing API request handling, and troubleshooting local environment issues (e.g., resolving 405 Method Not Allowed errors, CORS configurations, and directory pathing).
+    * **Technical Documentation**: Assisted in refining the GitHub README structure and optimizing the technical presentation.
+* **Google Stitch (Labs)**: Used for **UI/UX Prototyping**, helping to design the high-fidelity dashboard layout and visual hierarchy.
+* **NotebookLM**: Used to assist in structuring the technical specifications and pedagogical frameworks presented in the project slides.
+
+**2. Human-in-the-Loop & Originality**
+While AI tools assisted in execution, the following core components remain the **original work of the student**:
+* System Architecture**: The design of the "Flight Plan" ecosystem and the integration of the four feature modules.
+* Prompt Engineering**: All system instructions and agent personalities for the Tutor, Assessor, and Coach were manually crafted and tested to ensure pedagogical accuracy.
+* Deployment**: Manual configuration of the Render cloud hosting environment and project structure.
